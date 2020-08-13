@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  dataservice-etl:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-08-13T10:09:12.589752904+02:00"
+    description: Config for Dataservice etl
+    digest: aa061ba838cf6dbfecf3914648290730fa7628815db79bc1c476a9100b9d041c
+    home: https://github.com/Informasjonsforvaltning/dataservice-etl
+    name: dataservice-etl
+    urls:
+    - https://informasjonsforvaltning.github.io/dataservice-etl/dataservice-etl-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-08-13T10:09:12.589439859+02:00"
