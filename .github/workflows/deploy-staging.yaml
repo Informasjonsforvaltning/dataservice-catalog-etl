@@ -42,7 +42,6 @@ jobs:
           helm repo add dataservice-etl https://informasjonsforvaltning.github.io/dataservice-etl/
           helm fetch --untar --untardir ./helm dataservice-etl/dataservice-etl
           helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA" -f ./helm-sources/values/staging.yaml ./helm/dataservice-etl/  > ./kubectlapply.yaml
-        ## ${{ github.event.client_payload.sha }}"
           chmod o+w ./kubectlapply.yaml
           cat kubectlapply.yaml
 
