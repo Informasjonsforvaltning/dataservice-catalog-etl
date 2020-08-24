@@ -18,7 +18,7 @@ with open(inputfileName) as json_file:
     for dataservice in data:
         uploadUrl = 'http://dataservice-catalog:8080/catalogs/' + dataservice['organizationId'] + '/dataservices'
 
-        req = urllib.request.Request(uploadUrl, dataservice, headers={'content-type': 'application/json', 'accept': 'application/json'}, method='PATCH')
+        req = urllib.request.Request(uploadUrl, json.dumps(dataservice).encode("utf-8"), headers={'content-type': 'application/json', 'accept': 'application/json'}, method='PATCH')
 
         try:
             rsp = urllib.request.urlopen(req)
