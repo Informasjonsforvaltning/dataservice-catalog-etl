@@ -25,5 +25,5 @@ with open(inputfileName) as json_file:
             output_file.write(f'{rsp.status_code}' + ': ' + dataservice + "\n")
 
         except requests.HTTPError as err:
-            print(f'{err}' + ': ' + dataservice["title"])
+            print(f'{err}' + ': ' + dataservice["title"].get("nb"))
             error_file.write(f'{err}' + ': ' + dataservice + "\n")
