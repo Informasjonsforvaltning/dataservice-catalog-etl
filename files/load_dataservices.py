@@ -19,11 +19,13 @@ with open(inputfileName) as json_file:
     for dataservice in data:
         uploadUrl = 'http://dataservice-catalog:8080/catalogs/' + dataservice['organizationId'] + '/dataservices'
 
+        json_data = json.dumps(dataservice)
+
         try:
-            rsp = requests.patch(uploadUrl, json.dumps(dataservice), headers={'content-type': 'application/json', 'accept': 'application/json'})
+            rsp = requests.patch(uploadUrl, json_data, headers={'content-type': 'application/json', 'accept': 'application/json'})
             rsp.raise_for_status()
-            output_file.write(f'{rsp.status_code}' + ': ' + dataservice + "\n")
+            output_file.write(f'{rsp.status_code}' + ': ' + json_data + "\n")
 
         except requests.HTTPError as err:
             print(f'{err}' + ': ' + dataservice["title"].get("nb"))
-            error_file.write(f'{err}' + ': ' + dataservice + "\n")
+            error_file.write(f'{err}' + ': ' + json_data + "\n")
