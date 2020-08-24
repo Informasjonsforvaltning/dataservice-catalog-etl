@@ -28,7 +28,7 @@ jobs:
     - run: gcloud auth configure-docker
 
     - name: Build Docker image with GitHub commit sha tag and staging tag
-      run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:staging_latest
+      run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:staging_latest -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA
 
     - name: Publish docker image to Google Cloud
       run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-etl
