@@ -1,7 +1,9 @@
 name: Build and deploy to staging on push
 
 on:
-  - push
+  push:
+    branches:
+      - never
 
 jobs:
   build-and-deploy:
@@ -14,7 +16,7 @@ jobs:
     - name: Setup python environment
       uses: actions/setup-python@v1
       with:
-          python-version: 3.7
+        python-version: 3.7
 
     - name: Setup gcloud CLI
       uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
