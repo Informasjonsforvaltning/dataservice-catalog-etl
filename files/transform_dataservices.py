@@ -63,7 +63,6 @@ def mapEndpointURL(servers):
     endpointURLS = []
     for server in servers:
         endpointURLS.append(server["url"])
-        print(server["url"])
     return endpointURLS
 
 
