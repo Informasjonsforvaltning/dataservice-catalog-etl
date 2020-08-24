@@ -1,6 +1,7 @@
 import json
 import urllib.request
 import argparse
+import requests
 
 
 parser = argparse.ArgumentParser()
@@ -18,12 +19,11 @@ with open(inputfileName) as json_file:
     for dataservice in data:
         uploadUrl = 'http://dataservice-catalog:8080/catalogs/' + dataservice['organizationId'] + '/dataservices'
 
-        req = urllib.request.Request(uploadUrl, json.dumps(dataservice).encode("utf-8"), headers={'content-type': 'application/json', 'accept': 'application/json'}, method='PATCH')
-
         try:
-            rsp = urllib.request.urlopen(req)
-            output_file.write(f'{rsp.code}' + ': ' + dataservice + "\n")
+            rsp = requests.patch(uploadUrl, json.dumps(dataservice), headers={'content-type': 'application/json', 'accept': 'application/json'})
+            rsp.raise_for_status()
+            output_file.write(f'{rsp.status_code}' + ': ' + dataservice + "\n")
 
-        except urllib.error.HTTPError as err:
-            print(f'{err.code}' + ': ' + dataservice["title"])
-            error_file.write(f'{err.code}' + ': ' + dataservice + "\n")
+        except requests.HTTPError as err:
+            print(f'{err}' + ': ' + dataservice["title"])
+            error_file.write(f'{err}' + ': ' + dataservice + "\n")
