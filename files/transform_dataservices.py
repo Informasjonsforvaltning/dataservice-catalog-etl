@@ -61,8 +61,9 @@ def transform(data):
 
 def mapEndpointURL(servers):
     endpointURLS = []
-    for server in servers:
-        endpointURLS.append(server["url"])
+    if servers:
+        for server in servers:
+            endpointURLS.append(server["url"])
     return endpointURLS
 
 
