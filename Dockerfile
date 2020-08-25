@@ -1,6 +1,6 @@
 FROM python:3
 
-RUN mkdir /etl
+RUN mkdir -p /etl/tmp
 RUN mkdir -p /usr/src/app
 COPY /files /etl
 

@@ -11,51 +11,51 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v1
+    - uses: actions/checkout@v1
 
-      - name: Setup python environment
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.7
+    - name: Setup python environment
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
 
-      - name: Setup gcloud CLI
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-        with:
-          version: '270.0.0'
-          service_account_email: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_EMAIL }}
-          service_account_key: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
+    - name: Setup gcloud CLI
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      with:
+        version: '270.0.0'
+        service_account_email: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_EMAIL }}
+        service_account_key: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
 
-      - run: gcloud auth configure-docker
+    - run: gcloud auth configure-docker
 
-      - name: Build Docker image with GitHub commit sha tag and latest tag
-        run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:latest
+    - name: Build Docker image with GitHub commit sha tag and latest tag
+      run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:latest
 
-      - name: Publish docker image to Google Cloud
-        run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-etl
+    - name: Publish docker image to Google Cloud
+      run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-etl
 
-      - name: Apply Helm template
-        uses: stefanprodan/kube-tools@v1
-        with:
-          helm: 2.14.3
-          command: |
-            helm init --client-only
-            helm repo add dataservice-etl https://informasjonsforvaltning.github.io/dataservice-etl/
-            helm fetch --untar --untardir ./helm dataservice-etl/dataservice-etl
-            helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA" -f ./helm-sources/values/prod.yaml ./helm/dataservice-etl/ > ./kubectlapply.yaml
-            chmod o+w ./kubectlapply.yaml
-            cat kubectlapply.yaml
+    - name: Apply Helm template
+      uses: stefanprodan/kube-tools@v1
+      with:
+        helm: 2.14.3
+        command: |
+          helm init --client-only
+          helm repo add dataservice-etl https://informasjonsforvaltning.github.io/dataservice-etl/
+          helm fetch --untar --untardir ./helm dataservice-etl/dataservice-etl
+          helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA" -f ./helm-sources/values/prod.yaml ./helm/dataservice-etl/ > ./kubectlapply.yaml
+          chmod o+w ./kubectlapply.yaml
+          cat kubectlapply.yaml
 
-      - name: Get kubeconfig file from GKE
-        uses: machine-learning-apps/gke-kubeconfig@master
-        with:
-          application_credentials: ${{ secrets.DIGDIR_FDK_PROD_AUTODEPLOY }}
-          project_id: digdir-fdk-prod
-          location_zone: europe-north1-a
-          cluster_name: digdir-fdk-prod
+    - name: Get kubeconfig file from GKE
+      uses: machine-learning-apps/gke-kubeconfig@master
+      with:
+        application_credentials: ${{ secrets.DIGDIR_FDK_PROD_AUTODEPLOY }}
+        project_id: digdir-fdk-prod
+        location_zone: europe-north1-a
+        cluster_name: digdir-fdk-prod
 
-      - name: Deploy to prod
-        uses: docker://bitnami/kubectl:latest
-        env:
-          KUBECONFIG: '/github/workspace/.kube/config'
-        with:
-          args: "apply -f ./kubectlapply.yaml --force"
+    - name: Deploy to prod
+      uses: docker://bitnami/kubectl:latest
+      env:
+        KUBECONFIG: '/github/workspace/.kube/config'
+      with:
+        args: "apply -f ./kubectlapply.yaml --force"
