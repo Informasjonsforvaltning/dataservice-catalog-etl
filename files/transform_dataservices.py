@@ -29,7 +29,7 @@ def transform(data):
                                                    },
                                        "endpointUrls": mapEndpointURL(dataservice["_source"]["apiSpecification"].get("servers")),
                                        "endpointDescriptions": [dataservice["_source"].get("apiSpecUrl")],
-                                       "mediaTypes": dataservice["_source"]["apiSpecification"].get("formats"),
+                                       "mediaTypes": dataservice["_source"]["apiSpecification"].get("formats") if dataservice["_source"]["apiSpecification"].get("formats") else [],
                                        "description": {"nb": dataservice["_source"]["apiSpecification"]["info"].get("description")},
                                        "license": dataservice["_source"]["apiSpecification"]["info"].get("license"),
                                        "access": {"isAuthoritativeSource": dataservice["_source"].get("isNationalComponent"),
@@ -50,7 +50,7 @@ def transform(data):
                                        "termsOfServiceUrl": dataservice["_source"]["apiSpecification"]["info"].get("termsOfService"),
                                        "serviceType": dataservice["_source"].get("serviceType"),
                                        "servesDataset": dataservice["_source"].get("datasetUris"),
-                                       "status": dataservice["_source"].get("registrationStatus")
+                                       "status": checkStatus(dataservice["_source"].get("registrationStatus"))
                                        # "imported": ()
                                        }
             newArray.append(dataservice_transformed)
@@ -79,6 +79,12 @@ def parseContact(info):
             "url": info.get("url") if info else None,
             "email": info.get("email") if info else None
             }
+
+
+def checkStatus(status):
+    if status == "PUBLISH":
+        status = "PUBLISHED"
+    return status
 
 
 inputfileName = args.outputdirectory + "dataservices.json"

@@ -17,5 +17,9 @@ load:
 	echo "Loading dataservices...."
 	python3 ./load_dataservices.py -o ./tmp/
 
+remove_loaded:
+	echo "Removing loaded dataservices...."
+	python3 ./remove_loaded_dataservices.py -o ./tmp/
+
 clean:
 	rm ./tmp/*.json
