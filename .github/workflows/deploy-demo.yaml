@@ -28,7 +28,7 @@ jobs:
     - run: gcloud auth configure-docker
 
     - name: Build Docker image with GitHub commit sha tag and staging tag
-      run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:demo_latest
+      run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:demo_latest -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA
 
     - name: Publish docker image to Google Cloud
       run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-etl
@@ -41,7 +41,7 @@ jobs:
           helm init --client-only
           helm repo add dataservice-etl https://informasjonsforvaltning.github.io/dataservice-etl/
           helm fetch --untar --untardir ./helm dataservice-etl/dataservice-etl
-          helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA" -f ./helm-sources/values/demo.yaml ./helm/dataservice-etl/ > ./kubectlapply.yaml
+          helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/dataservice-etl:demo_latest" -f ./helm-sources/values/demo.yaml ./helm/dataservice-etl/ > ./kubectlapply.yaml
           chmod o+w ./kubectlapply.yaml
           cat kubectlapply.yaml
 
