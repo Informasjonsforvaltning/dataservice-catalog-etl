@@ -41,7 +41,7 @@ def transform(data):
                                                               "usageLimitation": {"nb": dataservice["_source"].get("usageLimitation")},
                                                               "capacityAndPerformance": {"nb": dataservice["_source"].get("performance")},
                                                               "reliability": {"nb": dataservice["_source"].get("availability")}},
-                                       "landingPage": dataservice["_source"]["apiSpecification"].get("externalDocs"),
+                                       "externalDocs": dataservice["_source"]["apiSpecification"].get("externalDocs"),
                                        "dataServiceStatus": {"statusText": dataservice["_source"].get("statusCode"),
                                                              # "expirationDate": (),
                                                              # "comment": (),
