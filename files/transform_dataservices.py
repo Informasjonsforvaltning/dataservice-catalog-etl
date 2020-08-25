@@ -17,8 +17,8 @@ def transform(data):
     for dataservice in array:
         if dataservice["_source"].get("harvestStatus") and dataservice["_source"].get("harvestStatus")["success"]:
             contact = parseContact(dataservice["_source"]["apiSpecification"]["info"].get("contact"))
-            dataservice_transformed = {"created": dataservice["_source"]["_lastModified"],
-                                       "modified": dataservice["_source"]["_lastModified"],
+            dataservice_transformed = {"created": dataservice["_source"]["_lastModified"][:19],
+                                       "modified": dataservice["_source"]["_lastModified"][:19],
                                        "organizationId": dataservice["_source"]["catalogId"],
                                        "operationCount": countPaths(dataservice["_source"]["apiSpecification"].get("paths")),
                                        "title": {"nb": dataservice["_source"]["apiSpecification"]["info"]["title"]},
@@ -28,7 +28,7 @@ def transform(data):
                                                    "email": contact.get("email")
                                                    },
                                        "endpointUrls": mapEndpointURL(dataservice["_source"]["apiSpecification"].get("servers")),
-                                       "endpointDescriptions": dataservice["_source"]["apiSpecUrl"],
+                                       "endpointDescriptions": [dataservice["_source"].get("apiSpecUrl")],
                                        "mediaTypes": dataservice["_source"]["apiSpecification"].get("formats"),
                                        "description": {"nb": dataservice["_source"]["apiSpecification"]["info"].get("description")},
                                        "license": dataservice["_source"]["apiSpecification"]["info"].get("license"),
