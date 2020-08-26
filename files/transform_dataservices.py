@@ -20,7 +20,7 @@ def transform(data):
                                        "organizationId": dataservice["_source"]["catalogId"],
                                        "operationCount": countPaths(dataservice["_source"]["apiSpecification"].get("paths")),
                                        "title": {"nb": dataservice["_source"]["apiSpecification"]["info"]["title"]},
-                                       "version": dataservice["_source"]["apiSpecification"]["info"]["version"],
+                                       "version": dataservice["_source"]["apiSpecification"]["info"].get("version"),
                                        "contact": {"name": contact.get("name"),
                                                    "url": contact.get("url"),
                                                    "email": contact.get("email")
