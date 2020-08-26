@@ -11,50 +11,48 @@ def transform(data):
     # Transforming according to rules in README
     array = data["hits"]["hits"]
     print(len(array))
-    newArray = []
     transformed = []
-    count = 0
     for dataservice in array:
-        contact = parseContact(dataservice["_source"]["apiSpecification"]["info"].get("contact"))
-        dataservice_transformed = {"created": dataservice["_source"]["_lastModified"][:19],
-                                   "modified": dataservice["_source"]["_lastModified"][:19],
-                                   "organizationId": dataservice["_source"]["catalogId"],
-                                   "operationCount": countPaths(dataservice["_source"]["apiSpecification"].get("paths")),
-                                   "title": {"nb": dataservice["_source"]["apiSpecification"]["info"]["title"]},
-                                   "version": dataservice["_source"]["apiSpecification"]["info"]["version"],
-                                   "contact": {"name": contact.get("name"),
-                                               "url": contact.get("url"),
-                                               "email": contact.get("email")
-                                               },
-                                   "endpointUrls": mapEndpointURL(dataservice["_source"]["apiSpecification"].get("servers")),
-                                   "endpointDescriptions": [dataservice["_source"].get("apiSpecUrl")],
-                                   "mediaTypes": dataservice["_source"]["apiSpecification"].get("formats") if dataservice["_source"]["apiSpecification"].get("formats") else [],
-                                   "description": {"nb": dataservice["_source"]["apiSpecification"]["info"].get("description")},
-                                   "license": dataservice["_source"]["apiSpecification"]["info"].get("license"),
-                                   "access": {"isAuthoritativeSource": dataservice["_source"].get("isNationalComponent"),
-                                              "isOpenAccess": dataservice["_source"].get("isOpenAccess"),
-                                              "isOpenLicense": dataservice["_source"].get("isOpenLicense"),
-                                              "isFree": dataservice["_source"].get("isFree")
-                                              },
-                                   "termsAndConditions": {"price": {"nb": dataservice["_source"].get("cost")},
-                                                          "usageLimitation": {"nb": dataservice["_source"].get("usageLimitation")},
-                                                          "capacityAndPerformance": {"nb": dataservice["_source"].get("performance")},
-                                                          "reliability": {"nb": dataservice["_source"].get("availability")}},
-                                   "externalDocs": dataservice["_source"]["apiSpecification"].get("externalDocs"),
-                                   "dataServiceStatus": {"statusText": dataservice["_source"].get("statusCode"),
-                                                         # "expirationDate": (),
-                                                         # "comment": (),
-                                                         # "supersededByUrl": ()
-                                                         },
-                                   "termsOfServiceUrl": dataservice["_source"]["apiSpecification"]["info"].get("termsOfService"),
-                                   "serviceType": dataservice["_source"].get("serviceType"),
-                                   "servesDataset": dataservice["_source"].get("datasetUris"),
-                                   "status": checkStatus(dataservice["_source"].get("registrationStatus"))
-                                   # "imported": ()
-                                   }
-        newArray.append(dataservice_transformed)
-    transformed = newArray
-    print("Total to be transformed: ", len(newArray))
+        if dataservice["_source"].get("harvestStatus") and dataservice["_source"].get("harvestStatus")["success"] or dataservice["_source"].get("harvestStatus") is None:
+            contact = parseContact(dataservice["_source"]["apiSpecification"]["info"].get("contact"))
+            dataservice_transformed = {"created": dataservice["_source"]["_lastModified"][:19],
+                                       "modified": dataservice["_source"]["_lastModified"][:19],
+                                       "organizationId": dataservice["_source"]["catalogId"],
+                                       "operationCount": countPaths(dataservice["_source"]["apiSpecification"].get("paths")),
+                                       "title": {"nb": dataservice["_source"]["apiSpecification"]["info"]["title"]},
+                                       "version": dataservice["_source"]["apiSpecification"]["info"]["version"],
+                                       "contact": {"name": contact.get("name"),
+                                                   "url": contact.get("url"),
+                                                   "email": contact.get("email")
+                                                   },
+                                       "endpointUrls": mapEndpointURL(dataservice["_source"]["apiSpecification"].get("servers")),
+                                       "endpointDescriptions": [dataservice["_source"].get("apiSpecUrl")],
+                                       "mediaTypes": dataservice["_source"]["apiSpecification"].get("formats") if dataservice["_source"]["apiSpecification"].get("formats") else [],
+                                       "description": {"nb": dataservice["_source"]["apiSpecification"]["info"].get("description")},
+                                       "license": dataservice["_source"]["apiSpecification"]["info"].get("license"),
+                                       "access": {"isAuthoritativeSource": dataservice["_source"].get("isNationalComponent"),
+                                                  "isOpenAccess": dataservice["_source"].get("isOpenAccess"),
+                                                  "isOpenLicense": dataservice["_source"].get("isOpenLicense"),
+                                                  "isFree": dataservice["_source"].get("isFree")
+                                                  },
+                                       "termsAndConditions": {"price": {"nb": dataservice["_source"].get("cost")},
+                                                              "usageLimitation": {"nb": dataservice["_source"].get("usageLimitation")},
+                                                              "capacityAndPerformance": {"nb": dataservice["_source"].get("performance")},
+                                                              "reliability": {"nb": dataservice["_source"].get("availability")}},
+                                       "externalDocs": dataservice["_source"]["apiSpecification"].get("externalDocs"),
+                                       "dataServiceStatus": {"statusText": dataservice["_source"].get("statusCode"),
+                                                             # "expirationDate": (),
+                                                             # "comment": (),
+                                                             # "supersededByUrl": ()
+                                                             },
+                                       "termsOfServiceUrl": dataservice["_source"]["apiSpecification"]["info"].get("termsOfService"),
+                                       "serviceType": dataservice["_source"].get("serviceType"),
+                                       "servesDataset": dataservice["_source"].get("datasetUris"),
+                                       "status": checkStatus(dataservice["_source"].get("registrationStatus"))
+                                       # "imported": ()
+                                       }
+            transformed.append(dataservice_transformed)
+    print("Total to be transformed: ", len(transformed))
     return transformed
 
 
