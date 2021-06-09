@@ -15,20 +15,23 @@ def transform(inputfile, inputfile2):
     print("Total number of extracted dataservices: " + str(len(dataservices)))
     for dataservice_key in dataservices:
         transformed = transform_dataservice(datasets, dataservices[dataservice_key])
-        transformed_dataservices[dataservice_key] = transformed
+        if transformed:
+            transformed_dataservices[dataservice_key] = transformed
     return transformed_dataservices
 
 
 def transform_dataservice(dataset_uris, dataservice):
     transformed_serves_dataset = []
-    for dataset_uri in dataservice.get("servesDataset"):
+    serves_dataset = dataservice.get("servesDataset")
+    serves_dataset = serves_dataset if serves_dataset else []
+    for dataset_uri in serves_dataset:
         new_uri = dataset_uris.get(dataset_uri)
         if new_uri:
             transformed_serves_dataset.append(new_uri)
         else:
             transformed_serves_dataset.append(dataset_uri)
     transformed_dataservice = {"servesDataset": transformed_serves_dataset}
-    return transformed_dataservice
+    return transformed_dataservice if len(transformed_serves_dataset) > 0 else None
 
 
 def openfile(file_name):
