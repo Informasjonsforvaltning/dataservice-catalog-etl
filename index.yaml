@@ -1,14 +1,25 @@
 apiVersion: v1
 entries:
+  dataservice-catalog-etl:
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2021-06-09T12:08:20.888170234+02:00"
+    description: Config for Dataservice catalog etl
+    digest: fc4bfac70cff14ad0c457a89ea76aee7d840e4bd4f90c164d81fe853793e11b8
+    home: https://github.com/Informasjonsforvaltning/dataservice-catalog-etl
+    name: dataservice-catalog-etl
+    urls:
+    - https://informasjonsforvaltning.github.io/dataservice-catalog-etl/dataservice-catalog-etl-0.1.0.tgz
+    version: 0.1.0
   dataservice-etl:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-08-14T13:06:01.346171132+02:00"
+    created: "2021-06-09T12:08:20.888399214+02:00"
     description: Config for Dataservice etl
     digest: 04f5c224fd4f38bbd6aae5f0962235a3fbc4807ccf37214051342d4125c6ef7d
     home: https://github.com/Informasjonsforvaltning/dataservice-etl
     name: dataservice-etl
     urls:
-    - https://informasjonsforvaltning.github.io/dataservice-etl/dataservice-etl-0.1.0.tgz
+    - https://informasjonsforvaltning.github.io/dataservice-catalog-etl/dataservice-etl-0.1.0.tgz
     version: 0.1.0
-generated: "2020-08-14T13:06:01.345842326+02:00"
+generated: "2021-06-09T12:08:20.886433876+02:00"

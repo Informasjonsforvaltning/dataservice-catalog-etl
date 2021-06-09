@@ -3,39 +3,49 @@ kind: Deployment
 metadata:
   creationTimestamp: null
   labels:
-    fdk.service: dataservice-etl
-  name: dataservice-etl
+    fdk.service: dataservice-catalog-etl
+  name: dataservice-catalog-etl
   namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      fdk.service: dataservice-etl
+      fdk.service: dataservice-catalog-etl
   strategy:
     type: Recreate
   template:
     metadata:
       creationTimestamp: null
       labels:
-        fdk.service: dataservice-etl
+        fdk.service: dataservice-catalog-etl
     spec:
       containers:
       - env:
-          - name: ELASTIC_DATASERVICE_INDEX
-            valueFrom:
-              secretKeyRef:
-                name: common-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
-                key: ELASTIC_DATASERVICE_INDEX
-          - name: DATASERVICE_BASE_URI
-            valueFrom:
-              secretKeyRef:
-                name: commonurl-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
-                key: FDK_DATASERVICE_HARVESTER_BASE_URI
+        - name: NAMESPACE
+          valueFrom:
+            secretKeyRef:
+              name: common-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+              key: NAMESPACE
+        - name: MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+              key: MONGO_USERNAME
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+              key: MONGO_PASSWORD
+        - name: FDK_REGISTRATION_BASE_URI
+          valueFrom:
+            secretKeyRef:
+              name: commonurl-{{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
+              key: FDK_REGISTRATION_BASE_URI
         image: {{ required "Missing value DOCKER_IMAGE_NAME" .Values.DOCKER_IMAGE_NAME }}
         imagePullPolicy: Always
-        name: dataservice-etl
+        name: dataservice-catalog-etl
         resources:
           requests:
-            memory: {{ required "Missing value FDK_DATASERVICE_ETL_MEMORY" .Values.FDK_DATASERVICE_ETL_MEMORY | quote }}
+            memory: {{ required "Missing value FDK_DATASERVICE_CATALOG_ETL_MEMORY" .Values.FDK_DATASERVICE_CATALOG_ETL_MEMORY | quote }}
       restartPolicy: Always
 status: {}

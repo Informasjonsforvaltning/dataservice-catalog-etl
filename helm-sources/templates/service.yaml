@@ -3,8 +3,8 @@ kind: Service
 metadata:
   creationTimestamp: null
   labels:
-    fdk.service: dataservice-etl
-  name: dataservice-etl
+    fdk.service: dataservice-catalog-etl
+  name: dataservice-catalog-etl
   namespace: {{ required "Missing value NAMESPACE" .Values.NAMESPACE }}
 spec:
   type: NodePort
@@ -13,6 +13,6 @@ spec:
     port: 8080
     targetPort: 8080
   selector:
-    fdk.service: dataservice-etl
+    fdk.service: dataservice-catalog-etl
 status:
   loadBalancer: {}

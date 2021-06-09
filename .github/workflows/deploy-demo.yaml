@@ -3,7 +3,7 @@ name: Build and deploy to demo when merged to master
 on:
   push:
     branches:
-      - master
+      - no
 
 jobs:
   build-and-deploy:
@@ -11,39 +11,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
 
     - name: Setup python environment
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v2
       with:
         python-version: 3.7
 
     - name: Setup gcloud CLI
-      uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@master
       with:
-        version: '270.0.0'
         service_account_email: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_EMAIL }}
         service_account_key: ${{ secrets.GCP_SA_DIGDIR_FDK_GCR_KEY }}
 
-    - run: gcloud auth configure-docker
+    - run: gcloud auth configure-docker eu.gcr.io
 
     - name: Build Docker image with GitHub commit sha tag and staging tag
-      run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:demo_latest -t eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA
+      run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl:demo_latest -t eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl:$GITHUB_SHA
 
     - name: Publish docker image to Google Cloud
-      run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-etl
+      run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl -a
 
     - name: Apply Helm template
-      uses: stefanprodan/kube-tools@v1
-      with:
-        helm: 2.14.3
-        command: |
-          helm init --client-only
-          helm repo add dataservice-etl https://informasjonsforvaltning.github.io/dataservice-etl/
-          helm fetch --untar --untardir ./helm dataservice-etl/dataservice-etl
-          helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/dataservice-etl:$GITHUB_SHA" -f ./helm-sources/values/demo.yaml ./helm/dataservice-etl/ > ./kubectlapply.yaml
-          chmod o+w ./kubectlapply.yaml
-          cat kubectlapply.yaml
+      run: |
+        helm repo add dataservice-catalog-etl https://informasjonsforvaltning.github.io/dataservice-catalog-etl/
+        helm fetch --untar --untardir ./helm dataservice-catalog-etl/dataservice-catalog-etl
+        helm template --set DOCKER_IMAGE_NAME="eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl:$GITHUB_SHA" -f ./helm-sources/values/demo.yaml ./helm/dataservice-catalog-etl/ > ./kubectlapply.yaml
+        chmod o+w ./kubectlapply.yaml
+        cat kubectlapply.yaml
 
     - name: Get kubeconfig file from GKE
       uses: machine-learning-apps/gke-kubeconfig@master
