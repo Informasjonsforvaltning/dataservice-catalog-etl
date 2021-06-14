@@ -30,7 +30,7 @@ jobs:
       run: docker build . -t eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl:latest -t eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl:$GITHUB_SHA
 
     - name: Publish docker image to Google Cloud
-      run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl
+      run: docker -- push eu.gcr.io/digdir-fdk-infra/dataservice-catalog-etl -a
 
     - name: Apply Helm template
       run: |
